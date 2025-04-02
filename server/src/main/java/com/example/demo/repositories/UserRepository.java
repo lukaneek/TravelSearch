@@ -10,4 +10,6 @@ import com.example.demo.models.User;
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> {
 	Optional<User> findByEmail(String email);
+	
+	Optional<User> findByVerifyId(String verifyId);
 }

@@ -1,7 +1,5 @@
 package com.example.demo.models;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,13 +33,11 @@ public class User {
 	private String password;
 	
 	@Transient
-	@NotEmpty(message = "Confirm Password is required!")
-	@Size(min = 5, max = 128, message = "Confirm Password must be between 5 and 128 characters")
 	private String confirm;
 	
 	private Boolean isVerified;
 	
-	private String verificationId;
+	private String verifyId;
 	
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	private List<Session> sessions;
@@ -52,7 +48,7 @@ public class User {
 	@PrePersist
     protected void onCreate() {
         UUID uuid = UUID.randomUUID();
-        this.verificationId = uuid.toString();
+        this.verifyId = uuid.toString();
     }
 
 	public Long getId() {
@@ -103,12 +99,12 @@ public class User {
 		this.sessions = sessions;
 	}
 
-	public String getVerificationId() {
-		return verificationId;
+	public String getVerifyId() {
+		return verifyId;
 	}
 
-	public void setVerificationId(String verificationId) {
-		this.verificationId = verificationId;
+	public void setVerifyId(String verifyId) {
+		this.verifyId = verifyId;
 	}
 	
 	
