@@ -1,0 +1,10 @@
+vversion: "3.9"
+services:
+  clientserver-client:
+    build: .
+    container_name: travelsearch-client
+    environment:
+      NODE_ENV: production
+    ports:
+      - 5000:3000
+    restart: always

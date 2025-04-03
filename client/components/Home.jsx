@@ -57,7 +57,7 @@ function Home(props) {
     useEffect(() => {
         if (searchOrigin) {
             const id = setTimeout(() => {
-                axios.get("http://localhost:8080/flightlocation?query=" + searchOrigin,
+                axios.get(`${import.meta.env.VITE_BASE_SERVER_URL}/flightlocation?query=` + searchOrigin,
                     {
                         headers: {
                             'Authorization': `Bearer ${token}`
@@ -83,7 +83,7 @@ function Home(props) {
     useEffect(() => {
         if (searchDestination) {
             const id = setTimeout(() => {
-                axios.get("http://localhost:8080/flightlocation?query=" + searchDestination,
+                axios.get(`${import.meta.env.VITE_BASE_SERVER_URL}/flightlocation?query=` + searchDestination,
                     {
                         headers: {
                             'Authorization': `Bearer ${token}`
@@ -126,7 +126,7 @@ function Home(props) {
 
     const onSubmit = (e) => {
         e.preventDefault();
-        axios.get("http://localhost:8080/flightsearch",
+        axios.get(`${import.meta.env.VITE_BASE_SERVER_URL}/flightsearch`,
             {
                 params: {
                     inDate: flightSearch.inDate,
@@ -152,14 +152,6 @@ function Home(props) {
                     navigate("/");
                 }
             })
-    }
-
-    function formatMinutesToHoursMinutes(minutes) {
-        const duration = intervalToDuration({ start: 0, end: minutes * 60 * 1000 });
-        return formatDuration(duration, {
-            format: ['hours', 'minutes'],
-            delimiter: ' ',
-        });
     }
 
     function formatMinutesToHoursMinutesCustom(minutes) {
