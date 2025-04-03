@@ -15,9 +15,11 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
+          {/*
           <Route path="/" element={<Login saveToken={saveToken}/>} />
           <Route path="/register" element={<Register/>} />
-          <Route path={"/home"} element={<Home token={token}/> } />
+          */}
+          <Route path={"/"} element={<Home token={token}/> } />
         </Routes>
       </BrowserRouter>
     </>
