@@ -1,0 +1,43 @@
+name: Client Pipeline
+
+on:
+  push:
+    branches: 
+      - main
+    paths:
+      - 'client/**'
+
+jobs:
+
+  build:
+
+    defaults:
+      run:
+        working-directory: client
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Login Dockerhub 
+      env:
+        DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
+        DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+      run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+    - name: Build the Docker image
+      run: docker build -t lukaneek/travelsearch-client:latest .
+    - name: Push to Dockerhub
+      run: docker push lukaneek/travelsearch-client:latest
+    
+  deploy:
+    needs: build
+    runs-on: client 
+  
+    steps:
+    - name: Pull docker image
+      run: sudo docker pull lukaneek/travelsearch-client:latest
+    - name: Delete old docker container
+      run: sudo docker rm -f travelsearch-client || true
+    - name: Run docker container
+      run: sudo docker run -d -p 80:80 --name travelsearch-client lukaneek/travelsearch-client
+
