@@ -37,6 +37,7 @@ public class FlightController {
 		//	return new ResponseEntity(HttpStatus.UNAUTHORIZED);
 		//}
 		
+		
 		String uriString = "https://skyscanner89.p.rapidapi.com/flights/roundtrip/list" + "?inDate=" + inDate + "&outDate=" + outDate
 				+ "&origin=" + origin + "&originId=" + originId + "&destination=" + destination + "&destinationId=" + destinationId 
 				+ "&cabinClass=" + cabinClass.orElse("economy") + "&adults=" + adults.orElse(1) + "&children=" + children.orElse(0);

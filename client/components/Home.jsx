@@ -77,7 +77,6 @@ function Home(props) {
                 clearTimeout(id);
             }
         }
-
     }, [searchOrigin])
 
     useEffect(() => {
