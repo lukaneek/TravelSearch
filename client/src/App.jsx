@@ -19,7 +19,7 @@ function App() {
           <Route path="/" element={<Login saveToken={saveToken}/>} />
           <Route path="/register" element={<Register/>} />
           */}
-          <Route path={"/"} element={<Home token={token}/> } />
+          <Route path={`${import.meta.env.VITE_PATH}/`} element={<Home token={token}/> } />
         </Routes>
       </BrowserRouter>
     </>
