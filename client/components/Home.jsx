@@ -127,7 +127,6 @@ function Home(props) {
 
     const onSubmit = (e) => {
         e.preventDefault();
-        setIsLoading(true);
         const today = new Date();
         if (!flightSearch.inDate || !flightSearch.outDate || !flightSearch.destinationId || !flightSearch.originId) {
             alert("Please make sure all fields are populated.")
@@ -145,6 +144,7 @@ function Home(props) {
             alert("The origin and destination cannot be the same.");
             return;
         }
+        setIsLoading(true);
         axios.get(`${import.meta.env.VITE_BASE_SERVER_URL}/flightsearch`,
             {
                 params: {
