@@ -130,7 +130,6 @@ function Home(props) {
             alert("Please make sure all fields are populated.")
             return;
         }
-        
         else if ((flightSearch.inDate > flightSearch.outDate) || (flightSearch.inDate < today.toISOString().split('T')[0]) || (flightSearch.outDate < today.toISOString().split('T')[0])) {
             alert("Please enter valid dates.");
             return;
