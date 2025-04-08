@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { format, formatDuration, intervalToDuration } from 'date-fns';
+import { format } from 'date-fns';
 import Loading from "./Loading";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Button from 'react-bootstrap/Button';
@@ -16,7 +16,10 @@ function Home(props) {
     const { token } = props;
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
+    const [isLoadingBooking, setIsLoadingBooking] = useState(false);
+    const [bookingItemId, setBookingItemId] = useState("");
     const [searchResults, setSearchResults] = useState({});
+    const [searchResultToken, setSearchResultToken] = useState("");
     const [originResults, setOriginResults] = useState({});
     const [searchOrigin, setSearchOrigin] = useState("");
     const [destinationResults, setDestinationResults] = useState({});
@@ -165,6 +168,7 @@ function Home(props) {
             .then((res) => {
                 console.log(res.data.data);
                 setSearchResults(res.data.data);
+                setSearchResultToken(res.data.token);
             })
             .catch((e) => {
                 if (e.status == 401) {
@@ -182,6 +186,34 @@ function Home(props) {
         const min = minutes % 60;
 
         return min == 0 ? hours + "h" : hours + "h " + min;
+    }
+
+    function bookFlight(e, itineraryId) {
+        e.preventDefault();
+        setIsLoadingBooking(true);
+        setBookingItemId(itineraryId);
+        axios.get(`${import.meta.env.VITE_BASE_SERVER_URL}/flightdetails`, {
+            params: {
+                itineraryId: encodeURIComponent(itineraryId),
+                token: searchResultToken
+            },
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+            .then((res) => {
+                console.log(res.data);
+                window.open(
+                    `${res.data.itinerary.pricingOptions[0].agents[0].url}`, "_blank"
+                );
+            })
+            .catch((e) => {
+                console.log(e);
+            })
+            .finally(() => {
+                setIsLoadingBooking(false);
+                setBookingItemId("");
+            })
     }
 
     return (
@@ -355,7 +387,13 @@ function Home(props) {
                                                                                 </Accordion.Body>
                                                                             </Accordion.Item>
                                                                         </td>
-                                                                        <td>{item.price.formatted}</td>
+                                                                        <td>
+                                                                            {item.price.formatted}
+                                                                            <p/>
+                                                                            {
+                                                                               isLoadingBooking && bookingItemId == item.id ? <p>🌀 Loading...</p> : <button class="btn btn-primary" onClick={(e) => bookFlight(e, item.id)}>Book</button>
+                                                                            }
+                                                                        </td>
                                                                     </tr>
                                                                 </tbody>
                                                             </Table>
@@ -365,7 +403,6 @@ function Home(props) {
                                             </tr>
                                         </>
                                     ))
-
                                 }
                             </tbody>
                         </Table>

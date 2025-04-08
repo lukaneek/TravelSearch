@@ -86,4 +86,32 @@ public class FlightController {
 	    return new ResponseEntity<>(response.body(), HttpStatus.resolve(response.statusCode())); 
 	    
 	}
+	
+	@GetMapping("/flightdetails")
+	public ResponseEntity<?> flightDetails(@RequestHeader("Authorization") String authorizationHeader, 
+			@RequestParam String itineraryId, @RequestParam String token) {
+		//String bearerToken = authorizationHeader.replace("Bearer ", "");
+		//if (!userServ.validateSession(bearerToken)) {
+		//	return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+		//}
+		
+		String uriString = "https://skyscanner89.p.rapidapi.com/flights/details?itineraryId=" + itineraryId + "&token=" + token;
+ 		
+		HttpClient client = HttpClient.newHttpClient();
+	    HttpRequest request = HttpRequest.newBuilder()
+	          .uri(URI.create(uriString))
+	          .header("x-rapidapi-host", "skyscanner89.p.rapidapi.com")
+	          .header("x-rapidapi-key", "a4af3e5d36msh0fa2fcbddc846d0p17c2d5jsne755f5ff81bf")
+	          .build();
+	    
+	    HttpResponse<String> response = null;
+	    try {
+	    	response = client.send(request, BodyHandlers.ofString());
+		} catch (Exception e) {
+			return new ResponseEntity<>("An unexpected error occured", HttpStatus.INTERNAL_SERVER_ERROR);
+		} 
+	    
+	    return new ResponseEntity<>(response.body(), HttpStatus.resolve(response.statusCode())); 
+	    
+	}
 }
