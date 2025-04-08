@@ -126,7 +126,7 @@ function Home(props) {
     const onSubmit = (e) => {
         e.preventDefault();
         const today = new Date();
-        if (!flightSearch.inDate || !flightSearch.outDate || !flightSearch.destination || !flightSearch.origin) {
+        if (!flightSearch.inDate || !flightSearch.outDate || !flightSearch.destinationId || !flightSearch.originId) {
             alert("Please make sure all fields are populated.")
             return;
         }
@@ -138,7 +138,7 @@ function Home(props) {
             alert("Must have at least one traveler.");
             return;
         }
-        else if (flightSearch.origin == flightSearch.destination) {
+        else if (flightSearch.originId == flightSearch.destinationId) {
             alert("The origin and destination cannot be the same.");
             return;
         }
@@ -244,11 +244,11 @@ function Home(props) {
                         </Form.Group>
                         <Form.Group as={Col} >
                             <Form.Label>Adults</Form.Label>
-                            <Form.Control name="numOfAdults" value={flightSearch.numOfAdults} onChange={(e) => { handleFlightSearchChange(e) }} type="number" placeholder="1" />
+                            <Form.Control name="numOfAdults" value={flightSearch.numOfAdults} onChange={(e) => { handleFlightSearchChange(e) }} type="number" min="0" />
                         </Form.Group>
                         <Form.Group as={Col}>
                             <Form.Label>Children</Form.Label>
-                            <Form.Control name="numOfChildren" value={flightSearch.numOfChildren} onChange={(e) => { handleFlightSearchChange(e) }} type="number" placeholder="0" />
+                            <Form.Control name="numOfChildren" value={flightSearch.numOfChildren} onChange={(e) => { handleFlightSearchChange(e) }} type="number" min="0" />
                         </Form.Group>
                     </Row>
 

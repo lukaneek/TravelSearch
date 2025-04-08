@@ -22,7 +22,6 @@ import com.example.demo.services.UserService;
 @RestController
 public class FlightController {
 	
-	
 	@Autowired
 	UserService userServ;
 	
