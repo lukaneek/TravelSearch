@@ -1,6 +1,6 @@
-vversion: "3.9"
+version: "3.9"
 services:
-  clientserver-client:
+  travelsearch-client:
     build: .
     container_name: travelsearch-client
     environment:
