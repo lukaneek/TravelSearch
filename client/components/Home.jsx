@@ -125,6 +125,23 @@ function Home(props) {
 
     const onSubmit = (e) => {
         e.preventDefault();
+        const today = new Date();
+        if (!flightSearch.inDate || !flightSearch.outDate || !flightSearch.destination || !flightSearch.origin) {
+            alert("Please make sure all fields are populated.")
+            return;
+        }
+        else if ((flightSearch.inDate > flightSearch.outDate) || (flightSearch.inDate < today.toISOString().split('T')[0]) || (flightSearch.outDate < today.toISOString().split('T')[0])) {
+            alert("Please enter valid dates.");
+            return;
+        }
+        else if (flightSearch.numOfAdults < 1 && flightSearch.numOfChildren < 1) {
+            alert("Must have at least one traveler.");
+            return;
+        }
+        else if (flightSearch.origin == flightSearch.destination) {
+            alert("The origin and destination cannot be the same.");
+            return;
+        }
         axios.get(`${import.meta.env.VITE_BASE_SERVER_URL}/flightsearch`,
             {
                 params: {
@@ -144,37 +161,13 @@ function Home(props) {
             })
             .then((res) => {
                 console.log(res.data.data);
-                const today = new Date();
-                if (!flightSearch.inDate || !flightSearch.outDate || !flightSearch.destination || !flightSearch.origin) {
-                    alert("Please make sure all fields are populated.")
-                    return;
-                }
-                else if ((flightSearch.inDate > flightSearch.outDate) || (flightSearch.inDate < today.toISOString().split('T')[0]) || (flightSearch.outDate < today.toISOString().split('T')[0])) {
-                    alert("Please enter valid dates.");
-                    return;
-                }
-                else if (flightSearch.numOfAdults < 1 && flightSearch.numOfChildren < 1) {
-                    alert("Must have atleast one traveler.");
-                    return;
-                }
-                else if (flightSearch.origin == flightSearch.destination) {
-                    alert("Please enter a seperate origin and destination.")
-                    return;
-                }
                 setSearchResults(res.data.data);
             })
             .catch((e) => {
                 if (e.status == 401) {
                     navigate("/");
                 }
-                else if (e.status == 500) {
-                    if (!flightSearch.inDate || !flightSearch.outDate || !flightSearch.destination || !flightSearch.origin) {
-                        alert("Please make sure all fields are populated.")
-                    }
-                    else {
-                        alert("Something went wrong calling the API.  Please try again later.");
-                    }
-                }
+                alert("An error occured, please try again later.");
             })
     }
 
