@@ -37,11 +37,19 @@ public class FlightController {
 		//	return new ResponseEntity(HttpStatus.UNAUTHORIZED);
 		//}
 		
-		
-		String uriString = "https://skyscanner89.p.rapidapi.com/flights/roundtrip/list" + "?inDate=" + inDate + "&outDate=" + outDate
-				+ "&origin=" + origin + "&originId=" + originId + "&destination=" + destination + "&destinationId=" + destinationId 
-				+ "&cabinClass=" + cabinClass.orElse("economy") + "&adults=" + adults.orElse(1) + "&children=" + children.orElse(0);
- 		
+		String uriString = null;
+		if (outDate == null || outDate.isEmpty()) {
+			uriString = "https://skyscanner89.p.rapidapi.com/flights/one-way/list" + "?date=" + inDate 
+					+ "&origin=" + origin + "&originId=" + originId + "&destination=" + destination + "&destinationId=" + destinationId 
+					+ "&cabinClass=" + cabinClass.orElse("economy") + "&adults=" + adults.orElse(1) + "&children=" + children.orElse(0);
+		}
+		else {
+			uriString = "https://skyscanner89.p.rapidapi.com/flights/roundtrip/list" + "?inDate=" + inDate + "&outDate=" + outDate
+					+ "&origin=" + origin + "&originId=" + originId + "&destination=" + destination + "&destinationId=" + destinationId 
+					+ "&cabinClass=" + cabinClass.orElse("economy") + "&adults=" + adults.orElse(1) + "&children=" + children.orElse(0);
+	 		
+		}
+
 		HttpClient client = HttpClient.newHttpClient();
 	    HttpRequest request = HttpRequest.newBuilder()
 	          .uri(URI.create(uriString))
