@@ -3,7 +3,6 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { format } from 'date-fns';
 import Loading from "./Loading";
-import "bootstrap/dist/css/bootstrap.min.css";
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
@@ -295,119 +294,132 @@ function Home(props) {
                     </Button>
                 </Form>
             </div>
-            <div className="d-flex justify-content-center mx-auto">
+            <div style={{paddingTop: 50}} className="d-flex justify-content-center mx-auto">
                 {
                     isLoading ? <Loading /> :
 
-                        <Table style={{ width: 1100 }}>
-                            <tbody>
+                        <div style={{ width: 1100 }}>
+
+                            <ul class="nav nav-tabs" id="myTab" role="tablist">
                                 {
                                     searchResults?.itineraries?.buckets && searchResults.itineraries.buckets.map((bucket, bucketIndex) => (
-                                        <>
-                                            <tr>
-                                                <td>{bucket.name}</td>
-                                            </tr>
-                                            <tr>
-                                                <Accordion>
-                                                    {
-                                                        bucket.items.map((item, itemIndex) => (
-                                                            <Table>
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <Accordion.Item eventKey={itemIndex}>
-                                                                                <Accordion.Header>
-                                                                                    <tr>
-                                                                                        <td style={{ paddingRight: 25 }} >{item.legs[0].origin.city}</td> <td style={{ paddingLeft: 25 }} >{format(item.legs[0].departure, "MMMM d hh:mm aa")}</td>
-                                                                                        <td style={{ paddingLeft: 50, paddingRight: 25 }} >{formatMinutesToHoursMinutesCustom(item.legs[0].durationInMinutes)}</td>
-                                                                                        <td style={{ paddingLeft: 25, paddingRight: 50 }} >{item.legs[0].stopCount == 0 ? "Direct" : item.legs[0].stopCount + " Stop(s)"}</td>
-                                                                                        <td style={{ paddingRight: 25 }} >{item.legs[0].destination.city}</td> <td style={{ paddingLeft: 25 }} >{format(item.legs[0].arrival, "MMMM d hh:mm aa")}</td>
-                                                                                        <td style={{ paddingLeft: 25 }} >{item.legs[0].carriers.marketing[0].name} <img style={{ width: 20 }} src={item.legs[0].carriers.marketing[0].logoUrl}></img></td>
-                                                                                    </tr>
-                                                                                </Accordion.Header>
-                                                                                <Accordion.Body>
-                                                                                    {
-                                                                                        item.legs[0].stopCount > 0
-                                                                                            ? item.legs[0].segments.map((segment, segmentIndex) => (
-                                                                                                <tr>
-                                                                                                    <td style={{ paddingRight: 25 }} >{segment.origin.displayCode}</td> <td style={{ paddingLeft: 25 }} >{format(segment.departure, "MMMM d hh:mm aa")}</td>
-                                                                                                    <td style={{ paddingLeft: 50, paddingRight: 25 }} >{formatMinutesToHoursMinutesCustom(segment.durationInMinutes)}</td>
-                                                                                                    <td style={{ paddingLeft: 50, paddingRight: 50 }} >
-                                                                                                        <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-plane">
-                                                                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M16 10h4a2 2 0 0 1 0 4h-4l-4 7h-3l2 -7h-4l-2 2h-3l2 -4l-2 -4h3l2 2h4l-2 -7h3z" />
-                                                                                                        </svg>
-                                                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
-                                                                                                            <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8" />
-                                                                                                        </svg>
-                                                                                                    </td>
-                                                                                                    <td style={{ paddingLeft: 25, paddingRight: 50 }} >{segment.destination.displayCode}</td> <td style={{ paddingRight: 25 }} > {format(segment.arrival, "MMMM d hh:mm aa")}</td>
-                                                                                                    <td style={{ paddingLeft: 25 }} >{segment.operatingCarrier.name}</td>
-                                                                                                    <td style={{ paddingLeft: 50 }} >#{segment.flightNumber}</td>
-                                                                                                </tr>
-                                                                                            ))
-                                                                                            : ""
-                                                                                    }
-                                                                                </Accordion.Body>
-                                                                            </Accordion.Item>
+                                        <li class="nav-item" role="presentation">
+                                            <button class={bucketIndex == 0 ? "nav-link active" : "nav-link"} id={`${bucket.name}-tab`} data-bs-toggle="tab" data-bs-target={`#${bucket.name}`} type="button" role="tab" aria-controls={bucket.name} aria-selected="true">{bucket.name}</button>
+                                        </li>
 
-                                                                            <Accordion.Item eventKey={itemIndex}>
-                                                                                <Accordion.Header className="">
-                                                                                    <tr>
-
-                                                                                        <td style={{ paddingRight: 25 }}>{item.legs[1].origin.city}</td> <td style={{ paddingLeft: 25 }} >{format(item.legs[1].departure, "MMMM d hh:mm aa")}</td>
-                                                                                        <td style={{ paddingLeft: 50, paddingRight: 25 }} >{formatMinutesToHoursMinutesCustom(item.legs[1].durationInMinutes)}</td>
-                                                                                        <td style={{ paddingLeft: 25, paddingRight: 50 }} >{item.legs[1].stopCount == 0 ? "Direct" : item.legs[1].stopCount + " Stop(s)"}</td>
-                                                                                        <td style={{ paddingRight: 25 }}>{item.legs[1].destination.city}</td> <td style={{ paddingLeft: 25 }} >{format(item.legs[1].arrival, "MMMM d hh:mm aa")}</td>
-                                                                                        <td style={{ paddingLeft: 25 }} >{item.legs[1].carriers.marketing[0].name} <img style={{ width: 20 }} src={item.legs[1].carriers.marketing[0].logoUrl}></img></td>
-                                                                                    </tr>
-                                                                                </Accordion.Header>
-                                                                                <Accordion.Body>
-                                                                                    {
-                                                                                        item.legs[1].stopCount > 0
-                                                                                            ? item.legs[1].segments.map((segment, segmentIndex) => (
-                                                                                                <tr>
-                                                                                                    <td style={{ paddingRight: 25 }} >{segment.origin.displayCode}</td> <td style={{ paddingLeft: 25 }} >{format(segment.departure, "MMMM d hh:mm aa")}</td>
-                                                                                                    <td style={{ paddingLeft: 50, paddingRight: 25 }} >{formatMinutesToHoursMinutesCustom(segment.durationInMinutes)}</td>
-                                                                                                    <td style={{ paddingLeft: 50, paddingRight: 50 }} >
-                                                                                                        <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-plane">
-                                                                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M16 10h4a2 2 0 0 1 0 4h-4l-4 7h-3l2 -7h-4l-2 2h-3l2 -4l-2 -4h3l2 2h4l-2 -7h3z" />
-                                                                                                        </svg>
-                                                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
-                                                                                                            <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8" />
-                                                                                                        </svg>
-                                                                                                    </td>
-                                                                                                    <td style={{ paddingLeft: 25, paddingRight: 50 }} >{segment.destination.displayCode}</td> <td style={{ paddingRight: 25 }} > {format(segment.arrival, "MMMM d hh:mm aa")}</td>
-
-                                                                                                    <td style={{ paddingLeft: 25 }} >{segment.operatingCarrier.name}</td>
-                                                                                                    <td style={{ paddingLeft: 50 }} >#{segment.flightNumber}</td>
-                                                                                                </tr>
-                                                                                            ))
-                                                                                            : ""
-                                                                                    }
-                                                                                </Accordion.Body>
-                                                                            </Accordion.Item>
-                                                                        </td>
-                                                                        <td>
-                                                                            {item.price.formatted}
-                                                                            <p/>
-                                                                            {
-                                                                               isLoadingBooking && bookingItemId == item.id ? <p>🌀 Loading...</p> : <button class="btn btn-primary" onClick={(e) => bookFlight(e, item.id)}>Book</button>
-                                                                            }
-                                                                        </td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </Table>
-                                                        ))
-                                                    }
-                                                </Accordion>
-                                            </tr>
-                                        </>
                                     ))
                                 }
-                            </tbody>
-                        </Table>
+                            </ul>
+                            <div class="tab-content" id="myTabContent">
+                                {
+                                    searchResults?.itineraries?.buckets && searchResults.itineraries.buckets.map((bucket, bucketIndex) => (
+                                        <div class={bucketIndex == 0 ? "tab-pane fade show active" : "tab-pane fade"} id={bucket.name} role="tabpanel" aria-labelledby={`${bucket.name}-tab`}>
+                                            <Table>
+                                                <tbody>
+                                                    <tr>
+                                                        <Accordion>
+                                                            {
+                                                                bucket.items.map((item, itemIndex) => (
+                                                                    <Table>
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <td>
+                                                                                    <Accordion.Item eventKey={itemIndex}>
+                                                                                        <Accordion.Header>
+                                                                                            <tr>
+                                                                                                <td style={{ paddingRight: 25 }} >{item.legs[0].origin.city}</td> <td style={{ paddingLeft: 25 }} >{format(item.legs[0].departure, "MMMM d hh:mm aa")}</td>
+                                                                                                <td style={{ paddingLeft: 50, paddingRight: 25 }} >{formatMinutesToHoursMinutesCustom(item.legs[0].durationInMinutes)}</td>
+                                                                                                <td style={{ paddingLeft: 25, paddingRight: 50 }} >{item.legs[0].stopCount == 0 ? "Direct" : item.legs[0].stopCount + " Stop(s)"}</td>
+                                                                                                <td style={{ paddingRight: 25 }} >{item.legs[0].destination.city}</td> <td style={{ paddingLeft: 25 }} >{format(item.legs[0].arrival, "MMMM d hh:mm aa")}</td>
+                                                                                                <td style={{ paddingLeft: 25 }} >{item.legs[0].carriers.marketing[0].name} <img style={{ width: 20 }} src={item.legs[0].carriers.marketing[0].logoUrl}></img></td>
+                                                                                            </tr>
+                                                                                        </Accordion.Header>
+                                                                                        <Accordion.Body>
+                                                                                            {
+                                                                                                item.legs[0].stopCount > 0
+                                                                                                    ? item.legs[0].segments.map((segment, segmentIndex) => (
+                                                                                                        <tr>
+                                                                                                            <td style={{ paddingRight: 25 }} >{segment.origin.displayCode}</td> <td style={{ paddingLeft: 25 }} >{format(segment.departure, "MMMM d hh:mm aa")}</td>
+                                                                                                            <td style={{ paddingLeft: 50, paddingRight: 25 }} >{formatMinutesToHoursMinutesCustom(segment.durationInMinutes)}</td>
+                                                                                                            <td style={{ paddingLeft: 50, paddingRight: 50 }} >
+                                                                                                                <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-plane">
+                                                                                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M16 10h4a2 2 0 0 1 0 4h-4l-4 7h-3l2 -7h-4l-2 2h-3l2 -4l-2 -4h3l2 2h4l-2 -7h3z" />
+                                                                                                                </svg>
+                                                                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+                                                                                                                    <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8" />
+                                                                                                                </svg>
+                                                                                                            </td>
+                                                                                                            <td style={{ paddingLeft: 25, paddingRight: 50 }} >{segment.destination.displayCode}</td> <td style={{ paddingRight: 25 }} > {format(segment.arrival, "MMMM d hh:mm aa")}</td>
+                                                                                                            <td style={{ paddingLeft: 25 }} >{segment.operatingCarrier.name}</td>
+                                                                                                            <td style={{ paddingLeft: 50 }} >#{segment.flightNumber}</td>
+                                                                                                        </tr>
+                                                                                                    ))
+                                                                                                    : ""
+                                                                                            }
+                                                                                        </Accordion.Body>
+                                                                                    </Accordion.Item>
+
+                                                                                    <Accordion.Item eventKey={itemIndex}>
+                                                                                        <Accordion.Header className="">
+                                                                                            <tr>
+
+                                                                                                <td style={{ paddingRight: 25 }}>{item.legs[1].origin.city}</td> <td style={{ paddingLeft: 25 }} >{format(item.legs[1].departure, "MMMM d hh:mm aa")}</td>
+                                                                                                <td style={{ paddingLeft: 50, paddingRight: 25 }} >{formatMinutesToHoursMinutesCustom(item.legs[1].durationInMinutes)}</td>
+                                                                                                <td style={{ paddingLeft: 25, paddingRight: 50 }} >{item.legs[1].stopCount == 0 ? "Direct" : item.legs[1].stopCount + " Stop(s)"}</td>
+                                                                                                <td style={{ paddingRight: 25 }}>{item.legs[1].destination.city}</td> <td style={{ paddingLeft: 25 }} >{format(item.legs[1].arrival, "MMMM d hh:mm aa")}</td>
+                                                                                                <td style={{ paddingLeft: 25 }} >{item.legs[1].carriers.marketing[0].name} <img style={{ width: 20 }} src={item.legs[1].carriers.marketing[0].logoUrl}></img></td>
+                                                                                            </tr>
+                                                                                        </Accordion.Header>
+                                                                                        <Accordion.Body>
+                                                                                            {
+                                                                                                item.legs[1].stopCount > 0
+                                                                                                    ? item.legs[1].segments.map((segment, segmentIndex) => (
+                                                                                                        <tr>
+                                                                                                            <td style={{ paddingRight: 25 }} >{segment.origin.displayCode}</td> <td style={{ paddingLeft: 25 }} >{format(segment.departure, "MMMM d hh:mm aa")}</td>
+                                                                                                            <td style={{ paddingLeft: 50, paddingRight: 25 }} >{formatMinutesToHoursMinutesCustom(segment.durationInMinutes)}</td>
+                                                                                                            <td style={{ paddingLeft: 50, paddingRight: 50 }} >
+                                                                                                                <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-plane">
+                                                                                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M16 10h4a2 2 0 0 1 0 4h-4l-4 7h-3l2 -7h-4l-2 2h-3l2 -4l-2 -4h3l2 2h4l-2 -7h3z" />
+                                                                                                                </svg>
+                                                                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+                                                                                                                    <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8" />
+                                                                                                                </svg>
+                                                                                                            </td>
+                                                                                                            <td style={{ paddingLeft: 25, paddingRight: 50 }} >{segment.destination.displayCode}</td> <td style={{ paddingRight: 25 }} > {format(segment.arrival, "MMMM d hh:mm aa")}</td>
+
+                                                                                                            <td style={{ paddingLeft: 25 }} >{segment.operatingCarrier.name}</td>
+                                                                                                            <td style={{ paddingLeft: 50 }} >#{segment.flightNumber}</td>
+                                                                                                        </tr>
+                                                                                                    ))
+                                                                                                    : ""
+                                                                                            }
+                                                                                        </Accordion.Body>
+                                                                                    </Accordion.Item>
+                                                                                </td>
+                                                                                <td>
+                                                                                    {item.price.formatted}
+                                                                                    <p />
+                                                                                    {
+                                                                                        isLoadingBooking && bookingItemId == item.id ? <p>🌀 Loading...</p> : <button class="btn btn-primary" onClick={(e) => bookFlight(e, item.id)}>Book</button>
+                                                                                    }
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </Table>
+                                                                ))
+                                                            }
+                                                        </Accordion>
+                                                    </tr>
+                                                </tbody>
+                                            </Table>
+                                        </div>
+
+                                    ))
+                                }
+                            </div>
+                        </div>
                 }
-            </div>
+            </div >
         </>
     )
 }
