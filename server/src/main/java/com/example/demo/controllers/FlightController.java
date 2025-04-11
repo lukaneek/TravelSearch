@@ -12,11 +12,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dtos.MultiCitySearch;
 import com.example.demo.services.UserService;
+import com.google.gson.Gson;
 
 @CrossOrigin(origins = {"http://localhost:5173", "https://lukavujasin.xyz"})
 @RestController
@@ -65,6 +69,34 @@ public class FlightController {
 		} 
 	    
 	    return new ResponseEntity<>(response.body(), HttpStatus.resolve(response.statusCode())); 
+	}
+	
+	@PostMapping("/multisearch")
+	public ResponseEntity<?> multiSearch(@RequestBody MultiCitySearch search) {
+		
+		String jsonInput = new Gson().toJson(search);
+		System.out.println(jsonInput);
+		
+		HttpClient client = HttpClient.newHttpClient();
+	    HttpRequest request = HttpRequest.newBuilder()
+	          .uri(URI.create("https://skyscanner89.p.rapidapi.com/flights/multi/list"))
+	          .header("Content-Type", "application/json")
+	          .header("x-rapidapi-host", "skyscanner89.p.rapidapi.com")
+	          .header("x-rapidapi-key", "a4af3e5d36msh0fa2fcbddc846d0p17c2d5jsne755f5ff81bf")
+	          .POST(HttpRequest.BodyPublishers.ofString(jsonInput))
+	          .build();
+	    
+	    HttpResponse<String> response = null;
+		
+	    try {
+			response = client.send(request, HttpResponse.BodyHandlers.ofString());
+		}
+		catch(Exception e) {
+			System.out.println(e);
+			//return new ResponseEntity<>("An unexpected error occured.", HttpStatus.INTERNAL_SERVER_ERROR); 
+		}
+		System.out.println(response.body());
+		return new ResponseEntity<>(response.body(), HttpStatus.resolve(response.statusCode())); 
 	}
 	
 	@GetMapping("/flightlocation")
