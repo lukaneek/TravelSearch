@@ -27,6 +27,11 @@ function OneWayRoundTrip(props) {
         numOfChildren: 0
     });
 
+    
+        useEffect(() => {
+            setSearchResults({});
+        }, [])
+
     function handleFlightSearchChange(e) {
         const { name, value } = e.target;
 
@@ -117,7 +122,7 @@ function OneWayRoundTrip(props) {
         setSearchOrigin("");
     }
 
-    const onSubmit = (e) => {
+    const onSubmit = (e, count = 1) => {
         e.preventDefault();
         const today = new Date();
         if (!flightSearch.inDate || !flightSearch.destinationId || !flightSearch.originId) {
@@ -162,6 +167,14 @@ function OneWayRoundTrip(props) {
             })
             .then((res) => {
                 console.log(res.data.data);
+                if (res.data.data.itineraries.buckets.length == 0 && count < 5) {
+                    console.log("Restarting search.")
+                    onSubmit(e, count + 1);
+                }
+                else if (res.data.data.itineraries.buckets.length == 0 && count == 5) {
+                    alert("Something went wrong, please try again later.");
+                    return;
+                }
                 setSearchResults(res.data.data);
                 setSearchResultToken(res.data.token);
             })

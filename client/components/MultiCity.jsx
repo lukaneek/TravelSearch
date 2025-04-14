@@ -38,8 +38,8 @@ function MultiCity(props) {
             searchDestination: ""
         }]
     )
-    const [originIndex, setOriginIndex] = useState(-1);
-    const [destinationIndex, setDestinationIndex] = useState(-1);
+    const [originIndex, setOriginIndex] = useState(0);
+    const [destinationIndex, setDestinationIndex] = useState(0);
 
     const [multiFlightSearch, setMultiFlightSearch] = useState({
         adults: 1,
@@ -48,6 +48,9 @@ function MultiCity(props) {
         cabinClass: "economy"
     });
 
+    useEffect(() => {
+        setSearchResults({});
+    }, [])
 
     function handleFlightSearchChange(e) {
         const { name, value } = e.target;
@@ -78,99 +81,99 @@ function MultiCity(props) {
             setOriginIndex(legIndex);
             leg.searchOrigin = value;
         }
-        setLegs(prevLegs => [...prevLegs.slice(0, legIndex), leg, ...prevLegs.slice(legIndex + 1)]); 
+        setLegs(prevLegs => [...prevLegs.slice(0, legIndex), leg, ...prevLegs.slice(legIndex + 1)]);
     }
 
     useEffect(() => {
-        if (originIndex > -1) {
-            const id = setTimeout(() => {
-                axios.get(`${import.meta.env.VITE_BASE_SERVER_URL}/flightlocation?query=` + legs[originIndex].searchOrigin,
-                    {
-                        headers: {
-                            'Authorization': `Bearer ${token}`
-                        }
-                    })
-                    .then((res) => {
-                        setLegs(prevLegs => [...prevLegs.slice(0, originIndex), {...legs[originIndex], originResults: res.data}, ...prevLegs.slice(originIndex + 1)]);
-                    })
-                    .catch((e) => {
-                        if (e.status == 401) {
-                            navigate("/");
-                        }
-                    })
-            }, 500);
+        const id = setTimeout(() => {
+            axios.get(`${import.meta.env.VITE_BASE_SERVER_URL}/flightlocation?query=` + legs[originIndex].searchOrigin,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                .then((res) => {
+                    setLegs(prevLegs => [...prevLegs.slice(0, originIndex), { ...legs[originIndex], originResults: res.data }, ...prevLegs.slice(originIndex + 1)]);
+                })
+                .catch((e) => {
+                    if (e.status == 401) {
+                        navigate("/");
+                    }
+                })
+        }, 500);
 
-            return () => {
-                clearTimeout(id);
-            }
+        return () => {
+            clearTimeout(id);
         }
-    }, [originIndex])
+    }, [legs[originIndex].searchOrigin])
 
     useEffect(() => {
-        if (destinationIndex > -1) {
-            const id = setTimeout(() => {
-                axios.get(`${import.meta.env.VITE_BASE_SERVER_URL}/flightlocation?query=` + legs[destinationIndex].searchDestination,
-                    {
-                        headers: {
-                            'Authorization': `Bearer ${token}`
-                        }
-                    })
-                    .then((res) => {
-                        setLegs(prevLegs => [...prevLegs.slice(0, destinationIndex), {...legs[destinationIndex], destinationResults: res.data}, ...prevLegs.slice(destinationIndex + 1)]);
-                    })
-                    .catch((e) => {
-                        if (e.status == 401) {
-                            navigate("/");
-                        }
-                    })
-            }, 500);
+        const id = setTimeout(() => {
+            axios.get(`${import.meta.env.VITE_BASE_SERVER_URL}/flightlocation?query=` + legs[destinationIndex].searchDestination,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                .then((res) => {
+                    setLegs(prevLegs => [...prevLegs.slice(0, destinationIndex), { ...legs[destinationIndex], destinationResults: res.data }, ...prevLegs.slice(destinationIndex + 1)]);
+                })
+                .catch((e) => {
+                    if (e.status == 401) {
+                        navigate("/");
+                    }
+                })
+        }, 500);
 
-            return () => {
-                clearTimeout(id);
-            }
-       }
-
-    }, [destinationIndex])
+        return () => {
+            clearTimeout(id);
+        }
+    }, [legs[destinationIndex].searchDestination])
 
     function handleDestinationItemClick(e, entityId, title, airportCode, legIndex) {
         e.preventDefault();
-        setLegs(prevLegs => [...prevLegs.slice(0, legIndex), {...legs[legIndex], destinationResults: {}, searchDestination: "", destinationId: entityId, destination: title, destinationAirportCode: airportCode}, ...prevLegs.slice(legIndex + 1)]);
+        setLegs(prevLegs => [...prevLegs.slice(0, legIndex), { ...legs[legIndex], destinationResults: {}, searchDestination: "", destinationId: entityId, destination: title, destinationAirportCode: airportCode }, ...prevLegs.slice(legIndex + 1)]);
     }
 
     function handleOriginItemClick(e, entityId, title, airportCode, legIndex) {
         e.preventDefault();
-        setLegs(prevLegs => [...prevLegs.slice(0, legIndex), {...legs[legIndex], originResults: {}, searchOrigin: "", originId: entityId, origin: title, originAirportCode: airportCode}, ...prevLegs.slice(legIndex + 1)]);
+        setLegs(prevLegs => [...prevLegs.slice(0, legIndex), { ...legs[legIndex], originResults: {}, searchOrigin: "", originId: entityId, origin: title, originAirportCode: airportCode }, ...prevLegs.slice(legIndex + 1)]);
     }
 
-    const onSubmit = (e) => {
+    const onSubmit = (e, count = 1) => {
         e.preventDefault();
         const today = new Date();
-        /*if (!flightSearch.inDate || !flightSearch.destinationId || !flightSearch.originId) {
-            alert("Please make sure all fields are populated.")
+
+        if (multiFlightSearch.adults == 0 && multiFlightSearch.children == 0) {
+            alert("Must have atleast one traveler.");
             return;
         }
-        if (flightSearch.inDate < today.toISOString().split('T')[0]) {
-            alert("Please enter a valid departing date.");
-            return;
-        }
-        if (flightSearch.outDate) {
-            if ((flightSearch.inDate > flightSearch.outDate) || (flightSearch.outDate < today.toISOString().split('T')[0])) {
-                alert("Please enter valid dates.");
+
+        for (let i = 0; i < legs.length; i++) {
+            if (!legs[i].originId || !legs[i].destinationId || !legs[i].departDate) {
+                alert("Please make sure all fields are populated.");
+                return;
+            }
+            if (legs[i].originId == legs[i].destinationId) {
+                alert("You cannot fly to the same airport.");
+                return;
+            }
+            if (legs[i].departDate < today.toISOString().split('T')[0]) {
+                alert("Please enter departing dates in the future.");
+                return;
+            }
+            if (legs[i + 1] && legs[i].departDate > legs[i + 1].departDate) {
+                alert("Please enter valid departing dates.");
                 return;
             }
         }
-        if (flightSearch.numOfAdults < 1 && flightSearch.numOfChildren < 1) {
-            alert("Must have at least one traveler.");
-            return;
-        }
-        if (flightSearch.originId == flightSearch.destinationId) {
-            alert("The origin and destination cannot be the same.");
-            return;
-        }*/
+
         setIsLoading(true);
         axios.post(`${import.meta.env.VITE_BASE_SERVER_URL}/multisearch`,
-            {...multiFlightSearch,
-            flights: legs}
+            {
+                ...multiFlightSearch,
+                flights: legs
+            }
             , {
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -178,6 +181,15 @@ function MultiCity(props) {
             })
             .then((res) => {
                 console.log(res.data.data);
+                if (res.data.data.itineraries.buckets.length == 0 && count < 5) {
+                    console.log("Restarting search.")
+                    onSubmit(e, count + 1);
+                }
+                else if (res.data.data.itineraries.buckets.length == 0 && count == 5) {
+                    alert("Something went wrong, please try again later.");
+                    return;
+                }
+                console.log(res.data);
                 setSearchResults(res.data.data);
                 setSearchResultToken(res.data.token);
             })
@@ -272,24 +284,24 @@ function MultiCity(props) {
                         <Button style={{ width: 100 }} onClick={(e) => addLeg(e)}>Add Leg</Button>
                     </Row>
                     <Row>
-                    <Row className="mb-3">
-                        <Form.Group as={Col} >
-                            <Form.Label>Cabin Class</Form.Label>
-                            <Form.Select name="cabinClass" value={multiFlightSearch.cabinClass} onChange={(e) => { handleFlightSearchChange(e) }}>
-                                <option value="economy">Economy</option>
-                                <option value="premium_economy">Premium Economy</option>
-                                <option value="business">Business Class</option>
-                            </Form.Select>
-                        </Form.Group>
-                        <Form.Group as={Col} >
-                            <Form.Label>Adults</Form.Label>
-                            <Form.Control name="adults" value={multiFlightSearch.adults} onChange={(e) => { handleFlightSearchChange(e) }} type="number" min="0" />
-                        </Form.Group>
-                        <Form.Group as={Col}>
-                            <Form.Label>Children</Form.Label>
-                            <Form.Control name="children" value={multiFlightSearch.children} onChange={(e) => { handleFlightSearchChange(e) }} type="number" min="0" />
-                        </Form.Group>
-                    </Row>
+                        <Row className="mb-3">
+                            <Form.Group as={Col} >
+                                <Form.Label>Cabin Class</Form.Label>
+                                <Form.Select name="cabinClass" value={multiFlightSearch.cabinClass} onChange={(e) => { handleFlightSearchChange(e) }}>
+                                    <option value="economy">Economy</option>
+                                    <option value="premium_economy">Premium Economy</option>
+                                    <option value="business">Business Class</option>
+                                </Form.Select>
+                            </Form.Group>
+                            <Form.Group as={Col} >
+                                <Form.Label>Adults</Form.Label>
+                                <Form.Control name="adults" value={multiFlightSearch.adults} onChange={(e) => { handleFlightSearchChange(e) }} type="number" min="0" />
+                            </Form.Group>
+                            <Form.Group as={Col}>
+                                <Form.Label>Children</Form.Label>
+                                <Form.Control name="children" value={multiFlightSearch.children} onChange={(e) => { handleFlightSearchChange(e) }} type="number" min="0" />
+                            </Form.Group>
+                        </Row>
                     </Row>
                     <Button variant="primary" onClick={(e) => onSubmit(e)} type="submit">
                         Search

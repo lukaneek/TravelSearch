@@ -75,7 +75,6 @@ public class FlightController {
 	public ResponseEntity<?> multiSearch(@RequestBody MultiCitySearch search) {
 		
 		String jsonInput = new Gson().toJson(search);
-		System.out.println(jsonInput);
 		
 		HttpClient client = HttpClient.newHttpClient();
 	    HttpRequest request = HttpRequest.newBuilder()
@@ -92,10 +91,8 @@ public class FlightController {
 			response = client.send(request, HttpResponse.BodyHandlers.ofString());
 		}
 		catch(Exception e) {
-			System.out.println(e);
-			//return new ResponseEntity<>("An unexpected error occured.", HttpStatus.INTERNAL_SERVER_ERROR); 
+			return new ResponseEntity<>("An unexpected error occured.", HttpStatus.INTERNAL_SERVER_ERROR); 
 		}
-		System.out.println(response.body());
 		return new ResponseEntity<>(response.body(), HttpStatus.resolve(response.statusCode())); 
 	}
 	
@@ -136,7 +133,7 @@ public class FlightController {
 		//}
 		
 		String uriString = "https://skyscanner89.p.rapidapi.com/flights/details?itineraryId=" + itineraryId + "&token=" + token;
- 		
+		
 		HttpClient client = HttpClient.newHttpClient();
 	    HttpRequest request = HttpRequest.newBuilder()
 	          .uri(URI.create(uriString))
