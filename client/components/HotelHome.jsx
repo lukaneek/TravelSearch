@@ -9,6 +9,7 @@ import Table from 'react-bootstrap/Table';
 import Loading from "./Loading";
 import Modal from 'react-bootstrap/Modal';
 import ChildAges from "./ChildAges";
+import HotelMap from "./HotelMap";
 
 function HotelHome(props) {
     const { token } = props;
@@ -134,13 +135,13 @@ function HotelHome(props) {
 
     function setChildAge(e, childIndex) {
         e.preventDefault();
-        setHotelSearch(prevHotelSearch => ({...prevHotelSearch, childrenAge: [...prevHotelSearch.childrenAge.slice(0, childIndex), e.target.value , ...prevHotelSearch.childrenAge.slice(childIndex + 1)]}));
+        setHotelSearch(prevHotelSearch => ({ ...prevHotelSearch, childrenAge: [...prevHotelSearch.childrenAge.slice(0, childIndex), e.target.value, ...prevHotelSearch.childrenAge.slice(childIndex + 1)] }));
     }
 
     return (
         <>
             <div className="d-flex justify-content-center mx-auto">
-                <Form style={{ width: 1100, paddingTop: 30}}>
+                <Form style={{ width: 1100, paddingTop: 30 }}>
 
                     <Row className="mb-3 d-flex align-items-center">
                         <Form.Group as={Col} >
@@ -168,7 +169,7 @@ function HotelHome(props) {
                             <Form.Control name="checkOut" value={hotelSearch.checkOut} onChange={(e) => { handleHotelSearchChange(e) }} type="date" />
                         </Form.Group>
                         <Form.Group as={Col}>
-                            <Button style={{marginTop: 30}} variant="outline-secondary" onClick={() => setShow(true)}>Adults: {hotelSearch.adults}, Children: {hotelSearch.childrenAge.length},  Rooms: {hotelSearch.rooms}</Button>
+                            <Button style={{ marginTop: 30 }} variant="outline-secondary" onClick={() => setShow(true)}>Adults: {hotelSearch.adults}, Children: {hotelSearch.childrenAge.length},  Rooms: {hotelSearch.rooms}</Button>
                             <Modal
                                 size="sm"
                                 show={show}
@@ -204,14 +205,14 @@ function HotelHome(props) {
                                                     style={{ marginLeft: 5 }} class="btn btn-primary">+</button>
                                             </div>
                                         </div>
-                                        <div class = "d-flex flex-wrap ">
-                                                {
-                                                    hotelSearch.childrenAge.map((child, childIndex) => (
-                                                        <div style={{width: 130, padding: 5}}>
-                                                            <ChildAges childIndex = {childIndex} setChildAge = {setChildAge}/>
-                                                        </div>
-                                                    ))
-                                                }
+                                        <div class="d-flex flex-wrap ">
+                                            {
+                                                hotelSearch.childrenAge.map((child, childIndex) => (
+                                                    <div style={{ width: 130, padding: 5 }}>
+                                                        <ChildAges childIndex={childIndex} setChildAge={setChildAge} />
+                                                    </div>
+                                                ))
+                                            }
                                         </div>
                                     </Form.Group>
                                     <Form.Group >
@@ -236,50 +237,68 @@ function HotelHome(props) {
                     </Button>
                 </Form>
             </div>
-            <div>
+            <div className="d-flex justify-content-center mx-auto">
                 <Table>
                     {
 
                         isLoading ? <Loading /> :
 
                             <tbody>
-                                {
-                                    searchResults?.results?.hotelCards.map((hotel, hotelIndex) => (
-                                        <tr>
-                                            <td><img src={hotel.images[0]} style={{ width: 250, height: 250 }} /></td>
-                                            <td>
-                                                {hotel.name}
-                                                <p />
-                                                {hotel.distance}
-                                                <p />
-                                                <img src={hotel.reviewsSummary.imageUrl} />
 
-                                                {hotel.reviewsSummary.score}
-                                                <p />
+                                <tr>
+                                    <td>
+                                        <Table>
+                                            <tbody>
+
+
+
                                                 {
-                                                    hotel.otherPrices.map((price, priceIndex) => (
-                                                        <td style={{ padding: 10 }}>
-                                                            <a href={price.url} target="_blank">
-                                                                {price.name}
+                                                    searchResults?.results?.hotelCards.map((hotel, hotelIndex) => (
+                                                        <tr>
+                                                            <td><img src={hotel.images[0]} style={{ width: 250, height: 250 }} /></td>
+                                                            <td>
+                                                                {hotel.name}
                                                                 <p />
-                                                                {price.price}
-                                                            </a>
-                                                        </td>
+                                                                {hotel.distance}
+                                                                <p />
+                                                                <img src={hotel.reviewsSummary.imageUrl} />
+
+                                                                {hotel.reviewsSummary.score}
+                                                                <p />
+                                                                {
+                                                                    hotel.otherPrices.map((price, priceIndex) => (
+                                                                        <td style={{ padding: 10 }}>
+                                                                            <a href={price.url} target="_blank">
+                                                                                {price.name}
+                                                                                <p />
+                                                                                {price.price}
+                                                                            </a>
+                                                                        </td>
+                                                                    ))
+                                                                }
+
+
+                                                            </td>
+                                                            <td>
+                                                                <button onClick={(e) => bookHotel(e, hotelIndex)} class="btn btn-primary">{hotel.cheapestPrice}/night</button>
+                                                            </td>
+
+                                                            <tr>
+
+                                                            </tr>
+                                                        </tr>
                                                     ))
                                                 }
-
-
-                                            </td>
-                                            <td>
-                                                <button onClick={(e) => bookHotel(e, hotelIndex)} class="btn btn-primary">{hotel.cheapestPrice}/night</button>
-                                            </td>
-
-                                            <tr>
-
-                                            </tr>
-                                        </tr>
-                                    ))
-                                }
+                                            </tbody>
+                                        </Table>
+                                    </td>
+                                    <td>
+                                        
+                                        
+                                            <HotelMap searchResults = {searchResults}/>
+                                   
+                                    </td>
+                                </tr>
                             </tbody>
                     }
                 </Table>
