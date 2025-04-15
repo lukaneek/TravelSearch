@@ -137,6 +137,12 @@ function HotelHome(props) {
         setHotelSearch(prevHotelSearch => ({...prevHotelSearch, childrenAge: [...prevHotelSearch.childrenAge.slice(0, childIndex), e.target.value , ...prevHotelSearch.childrenAge.slice(childIndex + 1)]}));
     }
 
+    function negitiveCheck(input) {
+        if (hotelSearch.input >= 0) {
+            setHotelSearch(prevHotelSearch => ({ ...prevHotelSearch, value: prevHotelSearch.value - 1 }))
+        }
+      }
+
     return (
         <>
             <div className="d-flex justify-content-center mx-auto">
