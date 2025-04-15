@@ -312,11 +312,11 @@ function MultiCity(props) {
                                     <Form.Group >
                                         <Form.Label>Adults</Form.Label>
                                         <div class="d-flex justify-content-between">
-                                            <h4>{multiFlightSearch.numOfAdults}</h4>
+                                            <h4>{multiFlightSearch.adults}</h4>
                                             <div>
-                                                <button onClick={() => setMultiFlightSearch(prevMultiFlightSearch => ({ ...prevMultiFlightSearch, adults: prevMultiFlightSearch.numOfAdults - 1 }))}
+                                                <button onClick={() => multiFlightSearch.adults > 1 ? setMultiFlightSearch(prevMultiFlightSearch => ({ ...prevMultiFlightSearch, adults: prevMultiFlightSearch.adults - 1 })) : ""}
                                                     style={{ marginRight: 5 }} class="btn btn-primary">-</button>
-                                                <button onClick={() => setMultiFlightSearch(prevMultiFlightSearch => ({ ...prevMultiFlightSearch, adults: prevMultiFlightSearch.numOfAdults + 1 }))}
+                                                <button onClick={() => setMultiFlightSearch(prevMultiFlightSearch => ({ ...prevMultiFlightSearch, adults: prevMultiFlightSearch.adults + 1 }))}
                                                     style={{ marginLeft: 5 }} class="btn btn-primary">+</button>
                                             </div>
                                         </div>
@@ -324,9 +324,9 @@ function MultiCity(props) {
                                     <Form.Group >
                                         <Form.Label>Children</Form.Label>
                                         <div class="d-flex justify-content-between">
-                                            <h4>{multiFlightSearch.numOfChildren}</h4>
+                                            <h4>{multiFlightSearch.children}</h4>
                                             <div>
-                                                <button onClick={() => setMultiFlightSearch(prevMultiFlightSearch => ({ ...prevMultiFlightSearch, children: prevMultiFlightSearch.children - 1 }))}
+                                                <button onClick={() => multiFlightSearch.children > 0 ? setMultiFlightSearch(prevMultiFlightSearch => ({ ...prevMultiFlightSearch, children: prevMultiFlightSearch.children - 1 })) : ""}
                                                     style={{ marginRight: 5 }} class="btn btn-primary">-</button>
                                                 <button onClick={() => setMultiFlightSearch(prevMultiFlightSearch => ({ ...prevMultiFlightSearch, children: prevMultiFlightSearch.children + 1 }))}
                                                     style={{ marginLeft: 5 }} class="btn btn-primary">+</button>

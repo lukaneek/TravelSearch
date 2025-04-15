@@ -266,7 +266,7 @@ function OneWayRoundTrip(props) {
                                         <div class="d-flex justify-content-between">
                                             <h4>{flightSearch.numOfAdults}</h4>
                                             <div>
-                                                <button onClick={() => setFlightSearch(prevFlightSearch => ({ ...prevFlightSearch, numOfAdults: prevFlightSearch.numOfAdults - 1 }))}
+                                                <button onClick={() => flightSearch.numOfAdults > 1 ? setFlightSearch(prevFlightSearch => ({ ...prevFlightSearch, numOfAdults: prevFlightSearch.numOfAdults - 1 })) : ""}
                                                     style={{ marginRight: 5 }} class="btn btn-primary">-</button>
                                                 <button onClick={() => setFlightSearch(prevFlightSearch => ({ ...prevFlightSearch, numOfAdults: prevFlightSearch.numOfAdults + 1 }))}
                                                     style={{ marginLeft: 5 }} class="btn btn-primary">+</button>
@@ -278,7 +278,7 @@ function OneWayRoundTrip(props) {
                                         <div class="d-flex justify-content-between">
                                             <h4>{flightSearch.numOfChildren}</h4>
                                             <div>
-                                                <button onClick={() => setFlightSearch(prevFlightSearch => ({ ...prevFlightSearch, numOfChildren: prevFlightSearch.numOfChildren - 1 }))}
+                                                <button onClick={() => flightSearch.numOfChildren > 0 ? setFlightSearch(prevFlightSearch => ({ ...prevFlightSearch, numOfChildren: prevFlightSearch.numOfChildren - 1 })) : ""}
                                                     style={{ marginRight: 5 }} class="btn btn-primary">-</button>
                                                 <button onClick={() => setFlightSearch(prevFlightSearch => ({ ...prevFlightSearch, numOfChildren: prevFlightSearch.numOfChildren + 1 }))}
                                                     style={{ marginLeft: 5 }} class="btn btn-primary">+</button>

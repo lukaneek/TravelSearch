@@ -137,12 +137,6 @@ function HotelHome(props) {
         setHotelSearch(prevHotelSearch => ({...prevHotelSearch, childrenAge: [...prevHotelSearch.childrenAge.slice(0, childIndex), e.target.value , ...prevHotelSearch.childrenAge.slice(childIndex + 1)]}));
     }
 
-    function negitiveCheck(input) {
-        if (hotelSearch.input >= 0) {
-            setHotelSearch(prevHotelSearch => ({ ...prevHotelSearch, value: prevHotelSearch.value - 1 }))
-        }
-      }
-
     return (
         <>
             <div className="d-flex justify-content-center mx-auto">
@@ -192,7 +186,7 @@ function HotelHome(props) {
                                         <div class="d-flex justify-content-between">
                                             <h4>{hotelSearch.adults}</h4>
                                             <div>
-                                                <button onClick={() => setHotelSearch(prevHotelSearch => ({ ...prevHotelSearch, adults: prevHotelSearch.adults - 1 }))}
+                                                <button onClick={() => hotelSearch.adults > 1 ? setHotelSearch(prevHotelSearch => ({ ...prevHotelSearch, adults: prevHotelSearch.adults - 1 })) : ""}
                                                     style={{ marginRight: 5 }} class="btn btn-primary">-</button>
                                                 <button onClick={() => setHotelSearch(prevHotelSearch => ({ ...prevHotelSearch, adults: prevHotelSearch.adults + 1 }))}
                                                     style={{ marginLeft: 5 }} class="btn btn-primary">+</button>
@@ -225,7 +219,7 @@ function HotelHome(props) {
                                         <div class="d-flex justify-content-between">
                                             <h4>{hotelSearch.rooms}</h4>
                                             <div>
-                                                <button onClick={() => setHotelSearch(prevHotelSearch => ({ ...prevHotelSearch, rooms: prevHotelSearch.rooms - 1 }))}
+                                                <button onClick={() => hotelSearch.rooms > 1 ? setHotelSearch(prevHotelSearch => ({ ...prevHotelSearch, rooms: prevHotelSearch.rooms - 1 })) : ""}
                                                     style={{ marginRight: 5 }} class="btn btn-primary">-</button>
                                                 <button onClick={() => setHotelSearch(prevHotelSearch => ({ ...prevHotelSearch, rooms: prevHotelSearch.rooms + 1 }))}
                                                     style={{ marginLeft: 5 }} class="btn btn-primary">+</button>
