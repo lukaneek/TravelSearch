@@ -1,76 +1,30 @@
-import React, { useState } from "react";
-import Loading from "./Loading";
-import Accordion from 'react-bootstrap/Accordion';
-import Table from 'react-bootstrap/Table';
-import FlightItem from "./FlightItem";
-import MultiCity from "./MultiCity";
-import OneWayRoundTrip from "./OneWayRoundTrip";
+import FlightHome from "./FlightHome";
+import HotelHome from "./HotelHome";
 
 function Home(props) {
     const { token } = props;
-    const [isLoading, setIsLoading] = useState(false);
-    const [searchResults, setSearchResults] = useState({});
-    const [searchResultToken, setSearchResultToken] = useState("");
-    const [isMultyCity, setIsMultiCity] = useState(false);
-
-
 
     return (
         <>
-            <h1>Flight Search Page</h1>
-            <div  style={{ width: 1000 }} className="d-flex justify-content-start mx-auto">
-                <a class="link-offset-2 link-underline link-underline-opacity-0" href="#" onClick={() => setIsMultiCity(!isMultyCity)}>
-                    {
-                        isMultyCity == false ? "Create a multi city route" : "Switch to one-way or roundtrip"
-                    }
-                </a>
+            <h1>Luka's Travel Search</h1>
+            <div className="d-flex justify-content-center mx-auto">
+
+                <div style={{ width: 1100 }}>
+                    <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="flight-tab" data-bs-toggle="tab" data-bs-target="#flight" type="button" role="tab" aria-controls="flight" aria-selected="true">Flight Search</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="hotel-tab" data-bs-toggle="tab" data-bs-target="#hotel" type="button" role="tab" aria-controls="hotel" aria-selected="false">Hotel Search</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="flight" role="tabpanel" aria-labelledby="flight-tab"><FlightHome token={token} /></div>
+                        <div class="tab-pane fade" id="hotel" role="tabpanel" aria-labelledby="hotel-tab"><HotelHome token={token} /></div>
+                    </div>
+
+                </div>
             </div>
-            {
-                isMultyCity == false ?
-                    <OneWayRoundTrip setSearchResults={setSearchResults} setSearchResultToken={setSearchResultToken} setIsLoading={setIsLoading} token={token} />
-                    :
-                    <MultiCity setSearchResults={setSearchResults} setSearchResultToken={setSearchResultToken} setIsLoading={setIsLoading} token={token} />
-            }
-            <div style={{ paddingTop: 50 }} className="d-flex justify-content-center mx-auto">
-                {
-                    isLoading ? <Loading /> :
-
-                        <div style={{ width: 1100 }}>
-
-                            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                {
-                                    searchResults?.itineraries?.buckets && searchResults.itineraries.buckets.map((bucket, bucketIndex) => (
-                                        <li class="nav-item" role="presentation">
-                                            <button class={bucketIndex == 0 ? "nav-link active" : "nav-link"} id={`${bucket.name}-tab`} data-bs-toggle="tab" data-bs-target={`#${bucket.name}`} type="button" role="tab" aria-controls={bucket.name} aria-selected="true">{bucket.name}</button>
-                                        </li>
-                                    ))
-                                }
-                            </ul>
-                            <div class="tab-content" id="myTabContent">
-                                {
-                                    searchResults?.itineraries?.buckets && searchResults.itineraries.buckets.map((bucket, bucketIndex) => (
-                                        <div class={bucketIndex == 0 ? "tab-pane fade show active" : "tab-pane fade"} id={bucket.name} role="tabpanel" aria-labelledby={`${bucket.name}-tab`}>
-                                            <Table>
-                                                <tbody>
-                                                    <tr>
-                                                        <Accordion>
-                                                            {
-                                                                bucket.items.map((item, itemIndex) => (
-                                                                    <FlightItem item={item} itemIndex={itemIndex} token={searchResultToken} />
-                                                                ))
-                                                            }
-                                                        </Accordion>
-                                                    </tr>
-                                                </tbody>
-                                            </Table>
-                                        </div>
-
-                                    ))
-                                }
-                            </div>
-                        </div>
-                }
-            </div >
         </>
     )
 }

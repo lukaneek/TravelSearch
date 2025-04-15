@@ -5,9 +5,12 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import ListGroup from 'react-bootstrap/ListGroup';
+import Modal from 'react-bootstrap/Modal';
 
 function OneWayRoundTrip(props) {
     const { setSearchResults, setSearchResultToken, setIsLoading, token } = props;
+
+    const [show, setShow] = useState(false);
 
     const [originResults, setOriginResults] = useState({});
     const [searchOrigin, setSearchOrigin] = useState("");
@@ -27,10 +30,10 @@ function OneWayRoundTrip(props) {
         numOfChildren: 0
     });
 
-    
-        useEffect(() => {
-            setSearchResults({});
-        }, [])
+
+    useEffect(() => {
+        setSearchResults({});
+    }, [])
 
     function handleFlightSearchChange(e) {
         const { name, value } = e.target;
@@ -244,21 +247,62 @@ function OneWayRoundTrip(props) {
                     </Row>
 
                     <Row className="mb-3">
-                        <Form.Group as={Col} >
-                            <Form.Label>Cabin Class</Form.Label>
-                            <Form.Select name="cabinClass" value={flightSearch.cabinClass} onChange={(e) => { handleFlightSearchChange(e) }}>
-                                <option value="economy">Economy</option>
-                                <option value="premium_economy">Premium Economy</option>
-                                <option value="business">Business Class</option>
-                            </Form.Select>
-                        </Form.Group>
-                        <Form.Group as={Col} >
-                            <Form.Label>Adults</Form.Label>
-                            <Form.Control name="numOfAdults" value={flightSearch.numOfAdults} onChange={(e) => { handleFlightSearchChange(e) }} type="number" min="0" />
-                        </Form.Group>
                         <Form.Group as={Col}>
-                            <Form.Label>Children</Form.Label>
-                            <Form.Control name="numOfChildren" value={flightSearch.numOfChildren} onChange={(e) => { handleFlightSearchChange(e) }} type="number" min="0" />
+                            <Button variant="outline-secondary" onClick={() => setShow(true)}>Adults: {flightSearch.numOfAdults}, Children: {flightSearch.numOfChildren},  Cabin Class: {flightSearch.cabinClass}</Button>
+                            <Modal
+                                size="sm"
+                                show={show}
+                                onHide={() => setShow(false)}
+                                aria-labelledby="example-modal-sizes-title-sm"
+                            >
+                                <Modal.Header closeButton>
+                                    <Modal.Title id="example-modal-sizes-title-sm">
+                                        Guests and rooms
+                                    </Modal.Title>
+                                </Modal.Header>
+                                <Modal.Body>
+                                    <Form.Group >
+                                        <Form.Label>Adults</Form.Label>
+                                        <div class="d-flex justify-content-between">
+                                            <h4>{flightSearch.numOfAdults}</h4>
+                                            <div>
+                                                <button onClick={() => setFlightSearch(prevFlightSearch => ({ ...prevFlightSearch, numOfAdults: prevFlightSearch.numOfAdults - 1 }))}
+                                                    style={{ marginRight: 5 }} class="btn btn-primary">-</button>
+                                                <button onClick={() => setFlightSearch(prevFlightSearch => ({ ...prevFlightSearch, numOfAdults: prevFlightSearch.numOfAdults + 1 }))}
+                                                    style={{ marginLeft: 5 }} class="btn btn-primary">+</button>
+                                            </div>
+                                        </div>
+                                    </Form.Group>
+                                    <Form.Group >
+                                        <Form.Label>Children</Form.Label>
+                                        <div class="d-flex justify-content-between">
+                                            <h4>{flightSearch.numOfChildren}</h4>
+                                            <div>
+                                                <button onClick={() => setFlightSearch(prevFlightSearch => ({ ...prevFlightSearch, numOfChildren: prevFlightSearch.numOfChildren - 1 }))}
+                                                    style={{ marginRight: 5 }} class="btn btn-primary">-</button>
+                                                <button onClick={() => setFlightSearch(prevFlightSearch => ({ ...prevFlightSearch, numOfChildren: prevFlightSearch.numOfChildren + 1 }))}
+                                                    style={{ marginLeft: 5 }} class="btn btn-primary">+</button>
+                                            </div>
+                                        </div>
+                                    </Form.Group>
+                                    <Form.Group >
+                                        <Form.Label>Cabin Class</Form.Label>
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <Form.Select  name="cabinClass" value={flightSearch.cabinClass} onChange={(e) => { handleFlightSearchChange(e) }}>
+                                                    <option value="economy">Economy</option>
+                                                    <option value="premium_economy">Premium Economy</option>
+                                                    <option value="business">Business Class</option>
+                                                </Form.Select>
+                                            </div>
+                                        </div>
+                                    </Form.Group >
+                                    <div style={{marginTop: 30}}>
+                                        <Button onClick={() => setShow(false)}>Submit</Button>
+                                    </div>
+
+                                </Modal.Body>
+                            </Modal>
                         </Form.Group>
                     </Row>
 
