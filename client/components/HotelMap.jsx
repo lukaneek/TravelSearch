@@ -4,12 +4,17 @@ import MapHover from './MapHover';
 
 function HotelMap(props) {
     const { searchResults } = props;
+    const { hotelHover } = props;
 
-    const [isOpen, setIsOpen] = useState(false);
+    const [openInfoWindowId, setOpenInfoWindowId] = useState(null);
 
-    const toggleOpen = () => {
-        console.log("toggle open called")
-        setIsOpen(!isOpen);
+    const toggleOpen = (markerId) => {
+        console.log("in " + markerId)
+        setOpenInfoWindowId(markerId)
+    };
+    const toggleClose = (markerId) => {
+        console.log("out " + markerId)
+        setOpenInfoWindowId(null)
     };
 
     return (
@@ -28,41 +33,46 @@ function HotelMap(props) {
                         >
                             {
                                 searchResults.results.hotelsCoordinates.map((hotel, hotelIndex) => (
-                                    <AdvancedMarker onMouseLeave={() => toggleOpen()} onMouseEnter={() => toggleOpen()} onClick={() => window.location.hash = hotel.id} position={{ lat: hotel.latitude, lng: hotel.longitude }}>
-                                        <div style={{
-                                            height: 25,
-                                            width: 50,
-                                            backgroundColor: "#000000",
-                                            borderRadius: 50,
-                                            display: 'flex',
-                                            color: "white",
-                                            justifyContent: 'center',
-                                            alignItems: 'center'}}>
-                                        <span style={{ fontSize: 10 }}>{hotel.price}</span>
-                                    </div>
-                                        
-                                    </AdvancedMarker>
+                                    <>
+                                        <AdvancedMarker onClick={() => window.location.hash = hotel.id} position={{ lat: hotel.latitude, lng: hotel.longitude }}>
+                                            <div onMouseLeave={() => toggleClose(hotel.id)} onMouseEnter={() => toggleOpen(hotel.id)} style={{
+                                                height: hotelHover != hotel.id ? 25 : 30,
+                                                width: hotelHover != hotel.id ? 50 : 60,
+                                                backgroundColor: hotelHover != hotel.id ?  "#000000" : "#0047AB",
+                                                borderRadius: 50,
+                                                display: 'flex',
+                                                color: "white",
+                                                justifyContent: 'center',
+                                                alignItems: 'center'
+                                            }}>
+                                                <b style={{ fontSize: 15 }}>{hotel.price}</b>
+                                            </div>
 
-                        ))
+                                        </AdvancedMarker>
+                                        {openInfoWindowId == hotel.id ?
+                                            <InfoWindow headerDisabled={true} position={{ lat: hotel.latitude + 0.0015, lng: hotel.longitude }}>
+                                                <div>
+                                                    {searchResults.results.hotelCards[hotelIndex].name}
+                                                </div>
+                                            </InfoWindow>
+
+
+                                            :
+                                            ""
+                                        }
+                                    </>
+                                ))
 
 
                             }
-                        {isOpen && (
-                            <InfoWindow
-
-                            >
-                                <div style={{ position: "fixed" }}>
-                                    hello
-                                </div>
-                            </InfoWindow>
-                        )}
 
 
-                    </Map>
+
+                        </Map>
                     </APIProvider >
                     :
-    ""
-}
+                    ""
+            }
         </>
     )
 }

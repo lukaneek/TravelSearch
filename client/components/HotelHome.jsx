@@ -15,6 +15,7 @@ function HotelHome(props) {
     const { token } = props;
 
     const [show, setShow] = useState(false);
+    const [ hotelHover, setHotelHover] = useState("");
 
     const [isLoading, setIsLoading] = useState(false);
     const [searchResults, setSearchResults] = useState({});
@@ -250,7 +251,7 @@ function HotelHome(props) {
                                                 {
                                                     searchResults?.results?.hotelCards.map((hotel, hotelIndex) => (
 
-                                                        <tr id={hotel.id}>
+                                                        <tr onMouseEnter={() => setHotelHover(hotel.id)} onMouseLeave={() => setHotelHover("")} id={hotel.id}>
                                                             <td><img src={hotel.images[0]} style={{ width: 250, height: 250 }} /></td>
                                                             <td>
                                                                 {hotel.name}
@@ -284,7 +285,7 @@ function HotelHome(props) {
                                         </Table>
                                     </td>
                                     <td>
-                                        <HotelMap searchResults={searchResults} />
+                                        <HotelMap searchResults={searchResults} hotelHover = { hotelHover }/>
                                     </td>
                                 </tr>
                             </tbody>
