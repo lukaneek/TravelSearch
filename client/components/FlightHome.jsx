@@ -50,7 +50,7 @@ function FlightHome(props) {
                                     searchResults?.itineraries?.buckets && searchResults.itineraries.buckets.map((bucket, bucketIndex) => (
                                         <div class={bucketIndex == 0 ? "tab-pane fade show active" : "tab-pane fade"} id={bucket.name} role="tabpanel" aria-labelledby={`${bucket.name}-tab`}>
                                             <Table>
-                                                <tbody>
+                                                <tbody style={{height: 500, display: "inline-block", width: 1300, overflow: "auto"}}>
                                                     <tr>
                                                         <Accordion>
                                                             {

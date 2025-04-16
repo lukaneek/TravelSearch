@@ -1,16 +1,16 @@
-import { APIProvider, Map, Marker } from '@vis.gl/react-google-maps';
+import { APIProvider, Map, Marker, InfoWindow, AdvancedMarker } from '@vis.gl/react-google-maps';
+import { useState } from 'react';
+import MapHover from './MapHover';
 
 function HotelMap(props) {
     const { searchResults } = props;
 
-    /*const customIcon = {
-        url: '../markerIcon/54272.png',
-        scaledSize: new window.google.maps.Size(30, 30),
-        origin: new window.google.maps.Point(0, 0),
-        anchor: new window.google.maps.Point(15, 15),
-        
-      };*/
+    const [isOpen, setIsOpen] = useState(false);
 
+    const toggleOpen = () => {
+        console.log("toggle open called")
+        setIsOpen(!isOpen);
+    };
 
     return (
         <>
@@ -19,7 +19,8 @@ function HotelMap(props) {
 
                     <APIProvider apiKey="AIzaSyB5A7Hdx5kv0ShvpTWDfLXpjiG6vpnAwH4">
                         <Map
-                            style={{ width: 500, height: 500}}
+                            mapId='hotelMap'
+                            style={{ width: 550, height: 600 }}
                             defaultCenter={{ lat: searchResults.results.hotelsRegion.latitude, lng: searchResults.results.hotelsRegion.longitude }}
                             defaultZoom={12}
                             gestureHandling={'greedy'}
@@ -27,15 +28,41 @@ function HotelMap(props) {
                         >
                             {
                                 searchResults.results.hotelsCoordinates.map((hotel, hotelIndex) => (
-                                    <Marker position={{ lat: hotel.latitude, lng: hotel.longitude }} label={hotel.price}></Marker>
-                                ))
+                                    <AdvancedMarker onMouseLeave={() => toggleOpen()} onMouseEnter={() => toggleOpen()} onClick={() => window.location.hash = hotel.id} position={{ lat: hotel.latitude, lng: hotel.longitude }}>
+                                        <div style={{
+                                            height: 25,
+                                            width: 50,
+                                            backgroundColor: "#000000",
+                                            borderRadius: 50,
+                                            display: 'flex',
+                                            color: "white",
+                                            justifyContent: 'center',
+                                            alignItems: 'center'}}>
+                                        <span style={{ fontSize: 10 }}>{hotel.price}</span>
+                                    </div>
+                                        
+                                    </AdvancedMarker>
+
+                        ))
+
+
                             }
-                            
-                        </Map>
-                    </APIProvider>
+                        {isOpen && (
+                            <InfoWindow
+
+                            >
+                                <div style={{ position: "fixed" }}>
+                                    hello
+                                </div>
+                            </InfoWindow>
+                        )}
+
+
+                    </Map>
+                    </APIProvider >
                     :
-                    ""
-            }
+    ""
+}
         </>
     )
 }

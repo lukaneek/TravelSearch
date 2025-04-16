@@ -9,7 +9,7 @@ function Home(props) {
             <h1>Luka's Travel Search</h1>
             <div className="d-flex justify-content-center mx-auto">
 
-                <div style={{ width: 1100 }}>
+                <div style={{ width: 1300 }}>
                     <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active" id="flight-tab" data-bs-toggle="tab" data-bs-target="#flight" type="button" role="tab" aria-controls="flight" aria-selected="true">Flight Search</button>

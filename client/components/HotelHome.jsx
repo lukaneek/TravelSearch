@@ -237,24 +237,20 @@ function HotelHome(props) {
                     </Button>
                 </Form>
             </div>
-            <div className="d-flex justify-content-center mx-auto">
-                <Table>
-                    {
-
-                        isLoading ? <Loading /> :
-
+            <div style={{position: "static"}} className="d-flex justify-content-center mx-auto">
+                {
+                    isLoading ? <Loading /> :
+                        <Table>
                             <tbody>
-
                                 <tr>
                                     <td>
-                                        <Table>
-                                            <tbody>
-
-
+                                        <Table >
+                                            <tbody className="w-60" style={{ height: 600, display: "inline-block", overflow: "auto" }}>
 
                                                 {
                                                     searchResults?.results?.hotelCards.map((hotel, hotelIndex) => (
-                                                        <tr>
+
+                                                        <tr id={hotel.id}>
                                                             <td><img src={hotel.images[0]} style={{ width: 250, height: 250 }} /></td>
                                                             <td>
                                                                 {hotel.name}
@@ -277,15 +273,10 @@ function HotelHome(props) {
                                                                     ))
                                                                 }
 
-
                                                             </td>
                                                             <td>
                                                                 <button onClick={(e) => bookHotel(e, hotelIndex)} class="btn btn-primary">{hotel.cheapestPrice}/night</button>
                                                             </td>
-
-                                                            <tr>
-
-                                                            </tr>
                                                         </tr>
                                                     ))
                                                 }
@@ -293,16 +284,12 @@ function HotelHome(props) {
                                         </Table>
                                     </td>
                                     <td>
-                                        
-                                        
-                                            <HotelMap searchResults = {searchResults}/>
-                                   
+                                        <HotelMap searchResults={searchResults} />
                                     </td>
                                 </tr>
                             </tbody>
-                    }
-                </Table>
-
+                        </Table>
+                }
             </div>
         </>
     )

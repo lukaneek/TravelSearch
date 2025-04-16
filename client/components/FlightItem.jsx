@@ -48,7 +48,7 @@ function FlightItem(props) {
     return (
         <>
             <Table>
-                <tbody>
+                <tbody >
                     <tr>
                         <td>
                             {

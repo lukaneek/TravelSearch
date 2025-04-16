@@ -233,15 +233,12 @@ function OneWayRoundTrip(props) {
                                 ))}
                             </ListGroup>
                         </Form.Group>
-                    </Row>
-
-                    <Row className="mb-3">
                         <Form.Group as={Col}>
                             <Form.Label>Depart</Form.Label>
                             <Form.Control name="inDate" value={flightSearch.inDate} onChange={(e) => { handleFlightSearchChange(e) }} type="date" />
                         </Form.Group>
                         <Form.Group as={Col}>
-                            <Form.Label>Return (Add a return date for round trip)</Form.Label>
+                            <Form.Label>Return (Add for round trip)</Form.Label>
                             <Form.Control name="outDate" value={flightSearch.outDate} onChange={(e) => { handleFlightSearchChange(e) }} type="date" />
                         </Form.Group>
                     </Row>
