@@ -1,3 +1,4 @@
+import AboutThisApp from "./AboutThisApp";
 import FlightHome from "./FlightHome";
 import HotelHome from "./HotelHome";
 
@@ -6,7 +7,7 @@ function Home(props) {
 
     return (
         <>
-            <h1>Luka's Travel Search</h1>
+            <AboutThisApp />
             <div className="d-flex justify-content-center mx-auto">
 
                 <div style={{ width: 1300 }}>
@@ -25,6 +26,7 @@ function Home(props) {
 
                 </div>
             </div>
+            
         </>
     )
 }

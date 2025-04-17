@@ -254,7 +254,7 @@ function OneWayRoundTrip(props) {
                             >
                                 <Modal.Header closeButton>
                                     <Modal.Title id="example-modal-sizes-title-sm">
-                                        Guests and rooms
+                                        Traveler Options
                                     </Modal.Title>
                                 </Modal.Header>
                                 <Modal.Body>
